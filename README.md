@@ -29,6 +29,8 @@ tuny.c is the Tuney clock. It interrupts regular ticking periodically to tick ou
 
 early.c is the Early clock. It's designed for people who like to set their clock ahead in order to be on-time. The early clock will stay anywhere between 0 and 10 minutes ahead, drifting back and forth. This prevents you from knowing exactly how far off it is, and compensating.
 
+rhythm.c is the Rhythm Clock. It ticks at a rhythm stored in eeprom (see rhythm.md).
+
 drift.h is a common infrastructure for clocks which tick simply and at a constant rate, but at a rate different than 86400 ticks per day. For such clocks, the expectation is that they will define a fraction similar to how the 10 Hz clock is generated. drift.h will use that fraction to either add or remove calls to doSleep() evenly across time. The result will be a clock that runs a fixed and accurate amount fast or slow relative to SI time (86400 seconds per day).
 
 The Martian clock ticks in Martian Sols. A day is 24 hours, 39 minutes, 36 seconds.

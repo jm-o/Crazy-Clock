@@ -6,7 +6,7 @@
 # alternative for the crystal installed in your hardware. If you fuse
 # the chip wrong, you will BRICK it!
 
-all: calibrate.hex crazy.hex early.hex lazy.hex martian.hex normal.hex sidereal.hex tidal.hex vetinari.hex warpy.hex wavy.hex whacky.hex tuney.hex
+all: calibrate.hex crazy.hex early.hex lazy.hex martian.hex normal.hex rhythm.hex sidereal.hex tidal.hex vetinari.hex warpy.hex wavy.hex whacky.hex tuney.hex
 
 # Change this as appropriate! Don't screw it up!
 
@@ -30,6 +30,7 @@ SPICLOCK = 250
 CC = $(AVR_PATH)bin/avr-gcc
 OBJCPY = $(AVR_PATH)bin/avr-objcopy
 AVRDUDE = $(AVR_PATH)bin/avrdude
+AVRSIZE = $(AVR_PATH)bin/avr-size
 
 CFLAGS = -Os -g -mmcu=$(CHIP) -std=c99 $(OPTS) -ffreestanding -Wall
 
@@ -47,6 +48,7 @@ calibrate.elf: calibrate.o
 
 %.elf: %.o base.o
 	$(CC) $(CFLAGS) -o $@ $^
+	$(AVRSIZE) -C --mcu=$(CHIP) $@
 
 clean:
 	rm -f *.o *.elf *.hex test-* *~
@@ -68,6 +70,12 @@ seed:
 # See offset.md
 offset:
 	$(AVRDUDE) $(DUDE_OPTS) -U eeprom:w:offset.hexi:i
+
+# Set rhythm file into the eeprom. 
+# Use 'make rhythm TYPE={the name of rhythm file you want}' e.g.: for rythm-normal.hexi file, 'make rhythm TYPE=normal'
+# See rhythm.md
+rhythm:
+	$(AVRDUDE) $(DUDE_OPTS) -U eeprom:w:rhythm-$(TYPE).hexi:i
 
 init: fuse flash seed offset
 

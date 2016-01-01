@@ -43,7 +43,7 @@
  * The random clocks may not print out '86400 Tick' every time, because
  * they may wind up in the middle of a transition point at the day boundary.
  * But done enough times, the average should be 86400. You can also
- * try to minimize the impact by multiplying 864000 by some number of
+ * try to minimize the impact by multiplying 86400 by some number of
  * days. If you don't get 86400*days Tick lines, then it should at least
  * be extremely close.
  */
@@ -66,6 +66,6 @@ void doTick() {
 }
 
 int main(int argc, char **argv) {
-  srandomdev();
+  //srandomdev();
   while(1) loop();
 }
