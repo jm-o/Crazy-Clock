@@ -1,6 +1,6 @@
 #
 # To use this, you use 'make init TYPE={the kind of clock you want}'
-# That will fuse, flash and seed the chip.
+# That will fuse, flash, seed and set the corrective clock offset in the chip.
 #
 # BE CAREFUL! Make sure that the fuse: target is set to the correct
 # alternative for the crystal installed in your hardware. If you fuse
@@ -49,7 +49,7 @@ calibrate.elf: calibrate.o
 	$(CC) $(CFLAGS) -o $@ $^
 
 clean:
-	rm -f *.o *.elf *.hex test-*
+	rm -f *.o *.elf *.hex test-* *~
 
 # The 32 kHz variant is fused for the extra-low frequency oscillator and no prescaling.
 fuse:
@@ -64,7 +64,16 @@ seed:
 	$(AVRDUDE) $(DUDE_OPTS) -U eeprom:w:seedfile:r
 	rm -f seedfile
 
-init: fuse flash seed
+# Apply a corrective offset to the clock.
+# See offset.md
+offset:
+	$(AVRDUDE) $(DUDE_OPTS) -U eeprom:w:offset.hexi:i
+
+init: fuse flash seed offset
+
+# Write EEPROM content into eeprom.hexo file in Intel HEX format.
+readeeprom:
+	$(AVRDUDE) $(DUDE_OPTS) -U eeprom:r:eeprom.hexo:i
 
 test:
 	gcc -c -DUNIT_TEST -O -o test-$(TYPE).o $(TYPE).c
