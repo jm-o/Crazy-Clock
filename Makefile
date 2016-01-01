@@ -6,9 +6,12 @@
 # alternative for the crystal installed in your hardware. If you fuse
 # the chip wrong, you will BRICK it!
 
-all: calibrate.hex normal.hex crazy.hex early.hex lazy.hex martian.hex sidereal.hex tidal.hex vetinari.hex warpy.hex wavy.hex whacky.hex tuney.hex
+all: calibrate.hex crazy.hex early.hex lazy.hex martian.hex normal.hex sidereal.hex tidal.hex vetinari.hex warpy.hex wavy.hex whacky.hex tuney.hex
 
 # Change this as appropriate! Don't screw it up!
+
+# AVR binaries path
+AVR_PATH = ~/arduino-1.6.5/hardware/tools/avr/
 
 # The clock is a 32.768 kHz crystal.
 OPTS = -DF_CPU=32768L
@@ -24,13 +27,13 @@ CHIP = attiny45
 # then you will have to find some other way to insure ISP operations don't go too fast.
 SPICLOCK = 250
 
-CC = avr-gcc
-OBJCPY = avr-objcopy
-AVRDUDE = avrdude
+CC = $(AVR_PATH)bin/avr-gcc
+OBJCPY = $(AVR_PATH)bin/avr-objcopy
+AVRDUDE = $(AVR_PATH)bin/avrdude
 
 CFLAGS = -Os -g -mmcu=$(CHIP) -std=c99 $(OPTS) -ffreestanding -Wall
 
-DUDE_OPTS = -c $(PROG) -p $(CHIP) -B $(SPICLOCK)
+DUDE_OPTS = -C $(AVR_PATH)etc/avrdude.conf -c $(PROG) -p $(CHIP) -B $(SPICLOCK)
 
 %.o: %.c Makefile
 	$(CC) $(CFLAGS) -c -o $@ $<
@@ -47,7 +50,6 @@ calibrate.elf: calibrate.o
 
 clean:
 	rm -f *.o *.elf *.hex test-*
-
 
 # The 32 kHz variant is fused for the extra-low frequency oscillator and no prescaling.
 fuse:
