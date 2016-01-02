@@ -3,12 +3,12 @@
 # That will fuse, flash, seed and set the corrective clock offset in the chip.
 #
 
-all: calibrate.hex crazy.hex early.hex lazy.hex martian.hex normal.hex rhythm.hex sidereal.hex tidal.hex vetinari.hex warpy.hex wavy.hex whacky.hex tuney.hex
+all: calibrate.hex crazy.hex early.hex lazy.hex martian.hex normal.hex rhythm.hex rhythm_pgm.hex sidereal.hex tidal.hex vetinari.hex warpy.hex wavy.hex whacky.hex tuney.hex
 
 # Change this as appropriate! Don't screw it up!
 
 # AVR binaries path
-AVR_PATH = ~/arduino-1.6.5/hardware/tools/avr/
+AVR_PATH = ~/arduino-1.6.5/hardware/tools/avr
 
 # The clock is a 32.768 kHz crystal.
 OPTS = -DF_CPU=32768L
@@ -24,14 +24,14 @@ CHIP = attiny45
 # then you will have to find some other way to insure ISP operations don't go too fast.
 SPICLOCK = 250
 
-CC = $(AVR_PATH)bin/avr-gcc
-OBJCPY = $(AVR_PATH)bin/avr-objcopy
-AVRDUDE = $(AVR_PATH)bin/avrdude
-AVRSIZE = $(AVR_PATH)bin/avr-size
+CC = $(AVR_PATH)/bin/avr-gcc
+OBJCPY = $(AVR_PATH)/bin/avr-objcopy
+AVRDUDE = $(AVR_PATH)/bin/avrdude
+AVRSIZE = $(AVR_PATH)/bin/avr-size
 
 CFLAGS = -Os -g -mmcu=$(CHIP) -std=c99 $(OPTS) -ffreestanding -Wall
 
-DUDE_OPTS = -C $(AVR_PATH)etc/avrdude.conf -c $(PROG) -p $(CHIP) -B $(SPICLOCK)
+DUDE_OPTS = -C $(AVR_PATH)/etc/avrdude.conf -c $(PROG) -p $(CHIP) -B $(SPICLOCK)
 
 %.o: %.c Makefile
 	$(CC) $(CFLAGS) -c -o $@ $<
