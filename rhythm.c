@@ -1,7 +1,7 @@
 /*
 
  Rhythm Clock for Arduino
- Copyright 2014 Jean Michel Olivier
+ Copyright 2016 Jean Michel Olivier
  
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -26,9 +26,7 @@
  * - 60 modulo (sleep times count + 1) MUST be equal to 0
  * - The sum of sleep times + wait time MUST be equal to (sleep times count + 1) * 10
  *
- * Offset 6 : sleep times count (1 byte - between 1 and 59)
- * Offset 7 : wait time between each sequence of sleep times (unsigned int)
- * Offset 9-67 : sleep times (1 byte each - between 0 and 255)
+ * See rhythm.md to change the pattern
  *
  */
 
@@ -57,14 +55,14 @@ void loop() {
   for(i = 0; i < count; i++)
     sleep[i] = (unsigned char)eeprom_read_byte(EE_SLEEP_LOC + i);
 
-  while(1){
+  while(1) {
     for(i = 0; i < count; i++) {
       doTick();
-      for(j = 0; j < sleep[i]; j++)
+      for(j = 1; j < sleep[i]; j++)
         doSleep();
     }
     doTick();
-    for(j = 0; j < wait; j++)
+    for(j = 1; j < wait; j++)
       doSleep();
   }
 }
